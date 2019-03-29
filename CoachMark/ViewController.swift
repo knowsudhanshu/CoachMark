@@ -20,7 +20,7 @@ class ViewController: UIViewController {
     
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
-        let indexPath = IndexPath(item: 3, section: 0)
+        let indexPath = IndexPath(item: 5, section: 0)
         let cell = myTableView.cellForRow(at: indexPath) as! Cell
         let convertedRect = cell.button.convert(cell.button.bounds, to: nil)
         
