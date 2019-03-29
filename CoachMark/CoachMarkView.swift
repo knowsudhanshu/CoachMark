@@ -8,6 +8,59 @@
 
 import UIKit
 
+class CoachMarkContainerView: UIView {
+    weak var dataSource: CoachMarkDataSource?
+    weak var delegate: CoachMarkDelegate?
+    
+    
+    var currentCoachMarkView: CoachMarkView?
+    var currentCoachMark: CoachMark? {
+        return coachMarks?[currentIndex]
+        //        return dataSource?.coachMark(at: currentIndex)
+    }
+    
+    var currentIndex: Int = -1
+    
+    var coachMarks: [CoachMark]?
+    
+    var numberOfItems: Int {
+        return coachMarks?.count ?? 0
+        //        return dataSource?.numberOfCoachMarks() ?? 0
+    }
+    
+    convenience init(coachMarks: [CoachMark]) {
+        self.init(frame: UIScreen.main.bounds)
+        self.coachMarks = coachMarks
+        showNextCoachMarkView()
+    }
+    
+    private func showNextCoachMarkView() {
+        
+        currentIndex += 1
+        
+        if currentIndex < numberOfItems {
+            currentCoachMarkView?.removeFromSuperview()
+            if let currentCoachMark = currentCoachMark {
+                currentCoachMarkView = CoachMarkView(coachMark: currentCoachMark, orientation: .up)
+                currentCoachMarkView?.tapActionHandler = {
+                    self.showNextCoachMarkView()
+                }
+                addSubview(currentCoachMarkView!)
+            }
+        }else {
+            removeFromSuperview()
+        }
+    }
+    
+    override init(frame: CGRect) {
+        super.init(frame: frame)
+    }
+    
+    required init?(coder aDecoder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
+}
+
 enum CoachMarkOrientation {
     case up, down, left, right
 }
@@ -27,7 +80,7 @@ struct CoachMark {
 }
 
 extension UIColor {
-    static let APP_THEME_ORANGE_COLOR: UIColor = #colorLiteral(red: 0.8823529412, green: 0.3215686275, blue: 0.1176470588, alpha: 1) //UIColor(hex: 0xE1521E)
+    static let HIGHLIGHT_BORDER_COLOR: UIColor = #colorLiteral(red: 0.8823529412, green: 0.3215686275, blue: 0.1176470588, alpha: 1) //UIColor(hex: 0xE1521E)
 }
 
 let INSET_MARGIN: CGFloat = 16
@@ -56,8 +109,8 @@ class CoachMarkView: UIView {
     
     let gotItButton: UIButton = {
         let button = UIButton(type: .custom)
-        button.setTitle("Got it!", for: .normal)
-        button.setTitleColor(.APP_THEME_ORANGE_COLOR, for: .normal)
+        button.setTitle("GOT IT", for: .normal)
+        button.setTitleColor(.HIGHLIGHT_BORDER_COLOR, for: .normal)
         return button
     }()
     
@@ -113,7 +166,6 @@ class CoachMarkView: UIView {
         )
         
         messageLabel.text = coachMark.message
-        
     }
     
     fileprivate func setupPointerImageView(_ sourceRect: CGRect, _ rectWithOffset: CGRect) {
@@ -171,71 +223,8 @@ class CoachMarkView: UIView {
         fatalError("init(coder:) has not been implemented")
     }
     
-    
     // Mark: - Actions
     @objc private func gotItAction() {
         tapActionHandler?()
-//        delegate?.coachMarkActionPerformed()
-//
-//        if currentIndex >= numberOfItems {
-//            removeFromSuperview()
-//        }else {
-//            // TODO: Show next coach mark
-//            showNext()
-//        }
-    }
-}
-
-
-class CoachMarkContainerView: UIView {
-    weak var dataSource: CoachMarkDataSource?
-    weak var delegate: CoachMarkDelegate?
-    
-    
-    var currentCoachMarkView: CoachMarkView?
-    var currentCoachMark: CoachMark? {
-        return coachMarks?[currentIndex]
-//        return dataSource?.coachMark(at: currentIndex)
-    }
-    
-    var currentIndex: Int = -1
-    
-    var coachMarks: [CoachMark]?
-    
-    var numberOfItems: Int {
-        return coachMarks?.count ?? 0
-//        return dataSource?.numberOfCoachMarks() ?? 0
-    }
-    
-    convenience init(coachMarks: [CoachMark]) {
-        self.init(frame: UIScreen.main.bounds)
-        self.coachMarks = coachMarks
-        showNextCoachMarkView()
-    }
-    
-    private func showNextCoachMarkView() {
-        
-        currentIndex += 1
-        
-        if currentIndex < numberOfItems {
-            currentCoachMarkView?.removeFromSuperview()
-            if let currentCoachMark = currentCoachMark {
-                currentCoachMarkView = CoachMarkView(coachMark: currentCoachMark, orientation: .up)
-                currentCoachMarkView?.tapActionHandler = {
-                    self.showNextCoachMarkView()
-                }
-                addSubview(currentCoachMarkView!)
-            }
-        }else {
-            removeFromSuperview()
-        }
-    }
-    
-    override init(frame: CGRect) {
-        super.init(frame: frame)
-    }
-    
-    required init?(coder aDecoder: NSCoder) {
-        fatalError("init(coder:) has not been implemented")
     }
 }
