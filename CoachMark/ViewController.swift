@@ -20,19 +20,23 @@ class ViewController: UIViewController {
     
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
-        let indexPath = IndexPath(item: 5, section: 0)
-        let cell = myTableView.cellForRow(at: indexPath) as! Cell
-        let convertedRect = cell.button.convert(cell.button.bounds, to: nil)
         
-        let coachMarkView = CoachMarkView(sourceRect: convertedRect, coachMark: CoachMark(message: "Hey! Please click here."))
-        view.addSubview(coachMarkView)
+        let indexPath1 = IndexPath(item: 3, section: 0)
+        let cell1 = myTableView.cellForRow(at: indexPath1) as! Cell
+        let convertedRect1 = cell1.button.convert(cell1.button.bounds, to: nil)
+        
+        let indexPath2 = IndexPath(item: 5, section: 0)
+        let cell2 = myTableView.cellForRow(at: indexPath2) as! Cell
+        let convertedRect2 = cell2.button.convert(cell2.button.bounds, to: nil)
+        
+        let coachMark1 = CoachMark(message: "1 Hey! Please click here.", sourceRect: convertedRect1)
+        let coachMark2 = CoachMark(message: "2 Hey! Please click here.", sourceRect: convertedRect2)
+        
+        let coachMarkContainerView = CoachMarkContainerView(coachMarks: [coachMark1, coachMark2])
+        view.addSubview(coachMarkContainerView)
 
     }
-    
-    
-    
 }
-
 
 extension ViewController: UITableViewDataSource {
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
